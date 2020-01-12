@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { WasmAppService } from './wasm-app.service';
 
 @NgModule({
   declarations: [
@@ -13,9 +12,7 @@ import { WasmAppService } from './wasm-app.service';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [
-    WasmAppService
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
