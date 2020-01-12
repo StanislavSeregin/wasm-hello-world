@@ -1,5 +1,4 @@
 use wasm_bindgen::prelude::*;
-use std::fmt;
 
 #[wasm_bindgen]
 #[repr(u8)]
@@ -17,25 +16,10 @@ pub struct Universe {
     cells: Vec<Cell>,
 }
 
-impl fmt::Display for Universe {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for line in self.cells.as_slice().chunks(self.width as usize) {
-            for &cell in line {
-                let symbol = if cell == Cell::Dead { '◻' } else { '◼' };
-                write!(f, "{}", symbol)?;
-            }
-            writeln!(f, "\n")?;
-        }
-
-        Ok(())
-    }
-}
-
 #[wasm_bindgen]
 impl Universe {
     pub fn tick(&mut self) {
         let mut next = self.cells.clone();
-
         for row in 0..self.height {
             for col in 0..self.width {
                 let idx = self.get_index(row, col);
@@ -59,7 +43,6 @@ impl Universe {
     pub fn new() -> Universe {
         let width = 64;
         let height = 64;
-
         let cells = (0..width * height)
             .map(|i| {
                 if i % 2 == 0 || i % 7 == 0 {
@@ -75,10 +58,6 @@ impl Universe {
             height,
             cells,
         }
-    }
-
-    pub fn render(&self) -> String {
-        self.to_string()
     }
 
     pub fn width(&self) -> u32 {
@@ -113,6 +92,7 @@ impl Universe {
                 count += self.cells[idx] as u8;
             }
         }
+
         count
     }
 }

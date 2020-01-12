@@ -15,9 +15,9 @@ const ALIVE_COLOR = "#000000";
 })
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: false }) canvasElementRef: ElementRef<HTMLCanvasElement>;
+  private canvasRenderingContext2D: CanvasRenderingContext2D;
   private wasmApp: WasmApp;
   private universe: Universe;
-  private canvasRenderingContext2D: CanvasRenderingContext2D;
   private universeWidth: number;
   private universeHeight: number;
 
@@ -81,7 +81,8 @@ export class AppComponent implements OnInit {
   private drawCells() {
     const cellsPtr = this.universe.cells();
     const cells = new Uint8Array(
-      this.wasmApp.wasm_memory().buffer, cellsPtr,
+      this.wasmApp.wasm_memory().buffer,
+      cellsPtr,
       this.universeWidth * this.universeHeight
     );
 
