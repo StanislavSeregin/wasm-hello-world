@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Universe } from 'wasm-app';
 type WasmApp = typeof import('wasm-app');
 const asyncImport = import('wasm-app');
 
@@ -15,29 +16,32 @@ const ALIVE_COLOR = "#000000";
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: false }) canvasElementRef: ElementRef<HTMLCanvasElement>;
   private wasmApp: WasmApp;
+  private universe: Universe;
   private canvasRenderingContext2D: CanvasRenderingContext2D;
   private universeWidth: number;
   private universeHeight: number;
 
-  constructor() { }
-
   async ngOnInit() {
     this.wasmApp = await asyncImport;
-    this.startLifeTheGame();
+    this.initUniverse();
+    this.runAnimation();
   }
 
-  private startLifeTheGame() {
-    const universe = this.wasmApp.Universe.new();
-    this.universeWidth = universe.width();
-    this.universeHeight = universe.height();
+  private initUniverse() {
+    this.universe = this.wasmApp.Universe.new();
+    this.universeWidth = this.universe.width();
+    this.universeHeight = this.universe.height();
     const canvas = this.canvasElementRef.nativeElement;
-    canvas.height = (CELL_SIZE + 1) * this.universeHeight + 1;
     canvas.width = (CELL_SIZE + 1) * this.universeWidth + 1;
+    canvas.height = (CELL_SIZE + 1) * this.universeHeight + 1;
     this.canvasRenderingContext2D = canvas.getContext('2d');
+  }
+
+  private runAnimation() {
     const renderLoop = () => {
-      universe.tick();
+      this.universe.tick();
       this.drawGrid();
-      this.drawCells(universe.cells());
+      this.drawCells();
       requestAnimationFrame(renderLoop);
     };
 
@@ -74,7 +78,8 @@ export class AppComponent implements OnInit {
     this.canvasRenderingContext2D.stroke();
   };
 
-  private drawCells(cellsPtr: number) {
+  private drawCells() {
+    const cellsPtr = this.universe.cells();
     const cells = new Uint8Array(
       this.wasmApp.wasm_memory().buffer, cellsPtr,
       this.universeWidth * this.universeHeight
@@ -83,7 +88,7 @@ export class AppComponent implements OnInit {
     this.canvasRenderingContext2D.beginPath();
     for (let row = 0; row < this.universeHeight; row++) {
       for (let col = 0; col < this.universeWidth; col++) {
-        const idx = this.getIndex(row, col);
+        const idx = row * this.universeWidth + col;
         this.canvasRenderingContext2D.fillStyle = cells[idx] === this.wasmApp.Cell.Dead
           ? DEAD_COLOR
           : ALIVE_COLOR;
@@ -98,9 +103,5 @@ export class AppComponent implements OnInit {
     }
 
     this.canvasRenderingContext2D.stroke();
-  };
-
-  private getIndex(row: number, column: number) {
-    return row * this.universeWidth + column;
   };
 }
