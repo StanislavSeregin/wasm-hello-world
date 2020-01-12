@@ -32,3 +32,15 @@ wasm-bindgen-test = "0.3.8"
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
+
+[dependencies.web-sys]
+version = "0.3.4"
+features = [
+  'AudioContext',
+  'AudioDestinationNode',
+  'AudioNode',
+  'AudioParam',
+  'GainNode',
+  'OscillatorNode',
+  'OscillatorType',
+]

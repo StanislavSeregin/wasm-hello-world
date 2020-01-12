@@ -1,5 +1,6 @@
 mod utils;
 mod game_of_life;
+mod fm_osc;
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "wee_alloc")]

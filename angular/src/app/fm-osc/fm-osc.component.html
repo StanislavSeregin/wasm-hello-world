@@ -1,0 +1,19 @@
+<input (click)="playOrStopPlayback()" type="button" value="⏯" />
+<span>(headphone users, please make sure your volume is not too loud!)</span>
+<div>
+    <span>Primary frequency: </span>
+    <input [(ngModel)]="primaryFrequency" (change)="updatePrimaryFrequency()" type="range" min="30" max="80" value="50"
+        style="width: 400px" />
+</div>
+
+<div>
+    <span>Modulation frequency: </span>
+    <input [(ngModel)]="modulationFrequency" (change)="updateModulationFrequency()" type="range" min="0" max="3"
+        value="0" step="0.05" style="width: 400px" />
+</div>
+
+<div>
+    <span>Modulation amount: </span>
+    <input [(ngModel)]="modulationAmount" (change)="updateModulationAmount()" type="range" min="0" max="3" value="0"
+        step="0.05" style="width: 400px" />
+</div>
